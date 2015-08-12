@@ -9,6 +9,7 @@ spring.oauth2.resource:
 logging:
   level:
     org.springframework.security: DEBUG
+    org.apache.hadoop.security: DEBUG  
 
 cf:
   resource: ${vcap.services.sso.credentials.apiEndpoint}
