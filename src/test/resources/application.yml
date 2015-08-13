@@ -1,0 +1,32 @@
+hdfs:
+  namenodeprincipal: hdfs/_HOST@KDC_REALM_NAME
+  uri: hdfs://namenode.host.addr/dir/
+  user: hdfs
+kerberos:
+  kdc: kdc.host.addr
+  realm: KDC_REALM_NAME
+  user: cf
+  pass: haselko
+
+security:
+  ignored: /rest/**,/callbacks/**
+
+oauth2:
+  client:
+    tokenUri: http://dummy.com
+    authorizationUri: http://dummy.com
+    clientId: dummy
+    clientSecret: dummy
+
+  resource:
+    id: cloud_controller
+    jwt:
+      keyUri: ${vcap.services.sso.credentials.tokenKey}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+cf:
+  resource: ${vcap.services.sso.credentials.apiEndpoint}
+  uaa: ${vcap.services.sso.credentials.uaaUri}

@@ -1,0 +1,13 @@
+---
+applications:
+- name: hdfs-downloader
+  memory: 1G
+  instances: 1
+  host: hdfs-downloader
+  path: target/downloader-${version}.jar
+  services:
+    - hdfs-instance
+    - sso
+  env:
+    SPRING_PROFILES_ACTIVE: "cloud,hdfs"
+    HDFS_USER: "cf"
