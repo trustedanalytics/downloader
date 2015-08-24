@@ -26,7 +26,7 @@ import org.apache.tika.mime.MediaType;
 
 public class GzipStreamDecoder implements StreamDecoder {
 
-    private final static byte[] GZIP_MAGIC = {(byte) 0x1f, (byte) 0x08b};
+    private static final byte[] GZIP_MAGIC = {(byte) 0x1f, (byte) 0x08b};
 
     private Detector gzipDetector = new MagicDetector(
             MediaType.application("gzip"), GZIP_MAGIC);

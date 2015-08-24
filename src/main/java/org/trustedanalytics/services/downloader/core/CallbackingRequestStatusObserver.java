@@ -28,7 +28,7 @@ import org.trustedanalytics.cloud.auth.HeaderAddingHttpInterceptor;
 
 public class CallbackingRequestStatusObserver implements RequestStatusObserver {
 
-    private final static Logger LOGGER =
+    private static final Logger LOGGER =
             LoggerFactory.getLogger(CallbackingRequestStatusObserver.class);
 
     private DownloadRequest request;

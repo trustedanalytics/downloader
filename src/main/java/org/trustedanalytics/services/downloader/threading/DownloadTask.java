@@ -33,7 +33,7 @@ import java.io.InputStream;
  */
 public class DownloadTask implements Runnable {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(DownloadTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadTask.class);
 
     private final DownloadRequest downloadRequest;
     private final IOStreamsProvider ioStreamsProvider;

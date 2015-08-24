@@ -44,7 +44,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class DownloadingWithTimeoutsOnIO implements DownloadingStrategy {
 
-    private final static Logger LOGGER =
+    private static final Logger LOGGER =
             LoggerFactory.getLogger(CallbackingRequestStatusObserver.class);
 
     private static final int PACKAGE_SIZE = 1024 * 1024; // 1 MB
