@@ -9,5 +9,6 @@ applications:
     - hdfs-instance
     - sso
   env:
-    SPRING_PROFILES_ACTIVE: "cloud,hdfs"
+    SPRING_PROFILES_ACTIVE: "cloud,hdfs,proxy"
     HDFS_USER: "cf"
+    VERSION: ${version}
