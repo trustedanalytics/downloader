@@ -8,7 +8,7 @@ applications:
   services:
     - hdfs-instance
     - sso
+    - kerberos-service
   env:
     SPRING_PROFILES_ACTIVE: "cloud,hdfs,proxy"
-    HDFS_USER: "cf"
     VERSION: ${version}
