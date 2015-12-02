@@ -17,7 +17,6 @@ package org.trustedanalytics.services.downloader;
 
 import org.trustedanalytics.utils.errorhandling.EnableRestErrorHandling;
 
-import com.mangofactory.swagger.plugin.EnableSwagger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.security.oauth2.resource.EnableOAuth2Resource;
@@ -26,7 +25,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableOAuth2Resource
 @EnableAutoConfiguration
 @ComponentScan("org.trustedanalytics")
-@EnableSwagger
 @EnableRestErrorHandling
 public class Main {
     public static void main(String[] args) {
