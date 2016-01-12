@@ -10,5 +10,5 @@ applications:
     - sso
     - kerberos-service
   env:
-    SPRING_PROFILES_ACTIVE: "cloud,hdfs,proxy"
+    SPRING_PROFILES_ACTIVE: "cloud,multitenant-hdfs,proxy"
     VERSION: ${version}

@@ -15,20 +15,22 @@
  */
 package org.trustedanalytics.services.downloader.api.rest;
 
-import org.trustedanalytics.store.ObjectStore;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.trustedanalytics.store.ObjectStore;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.UUID;
+import java.util.function.Function;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -39,13 +41,12 @@ public class RestFileStoreService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestFileStoreService.class);
 
     @Autowired
-    private ObjectStore objectStore;
+    private Function<UUID, ObjectStore> objectStoreFactory;
 
-    @RequestMapping(value = "/rest/filestore/{id}/", method = RequestMethod.DELETE)
-    public void delete(@PathVariable String id) throws IOException {
-        LOGGER.info("delete({})", id);
-        objectStore.remove(id);
-
+    @RequestMapping(value = "/rest/filestore/orgId/{orgId}/fileId/{id}/", method = RequestMethod.DELETE)
+    public void delete(@PathVariable UUID orgId, @PathVariable String id) throws IOException {
+        LOGGER.info("delete(org: {}, id: {})", orgId, id);
+        objectStoreFactory.apply(orgId).remove(id);
     }
 
     @ExceptionHandler(IOException.class)

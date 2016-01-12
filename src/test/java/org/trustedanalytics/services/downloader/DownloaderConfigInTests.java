@@ -30,8 +30,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.mockito.Mockito.mock;
 
@@ -58,6 +62,16 @@ public class DownloaderConfigInTests {
     @Bean
     public ObjectStore objectStore() {
         return new MemoryObjectStore();
+    }
+
+    @Bean
+    public Function<UUID, ObjectStore> objectStoreSupplier(ObjectStore objectStore) {
+        return (x) -> objectStore;
+    }
+
+    @Bean
+    public BiFunction<UUID, String, ObjectStore> objectStoreFactory(ObjectStore objectStore) {
+        return (x, y) -> objectStore;
     }
 
     @Bean

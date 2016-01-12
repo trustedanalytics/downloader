@@ -17,11 +17,21 @@ package org.trustedanalytics.services.downloader.api.rest;
 
 import com.google.common.base.MoreObjects;
 
+import java.util.UUID;
+
 public class Request {
 
+    private UUID orgUUID;
     private String source;
-
     private String callback;
+
+    public UUID getOrgUUID() {
+        return orgUUID;
+    }
+
+    public void setOrgUUID(UUID orgUUID) {
+        this.orgUUID = orgUUID;
+    }
 
     public String getCallback() {
         return callback;
@@ -42,6 +52,7 @@ public class Request {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+                .add("orgUUID", orgUUID)
                 .add("source", source)
                 .add("callback", callback)
                 .toString();

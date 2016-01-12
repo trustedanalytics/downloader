@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URL;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 // TODO: add parameters for source. For example credentials
@@ -43,12 +44,14 @@ public class DownloadRequest {
     private String savedObjectId;
     private String objectStoreId;
     private String token;
+    private UUID orgUUID;
 
-    public DownloadRequest(URI source, String token) {
+    public DownloadRequest(URI source, UUID orgUUID, String token) {
         this.source = source;
         this.state = State.NEW;
         this.downloadedBytes = new AtomicLong(0);
         this.token = Objects.requireNonNull(token);
+        this.orgUUID = Objects.requireNonNull(orgUUID);
     }
 
     public URI getSource() {
@@ -107,6 +110,10 @@ public class DownloadRequest {
 
     public void setObjectStoreId(String objectStoreId) {
         this.objectStoreId = objectStoreId;
+    }
+
+    public UUID getOrgUUID() {
+        return orgUUID;
     }
 
     @Override

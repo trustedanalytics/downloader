@@ -27,8 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 
 @Component
 public class MultithreadedDownloadingEngine implements DownloadingEngine {
@@ -42,21 +43,23 @@ public class MultithreadedDownloadingEngine implements DownloadingEngine {
     @Autowired
     private RequestStatusObserverFactory requestStatusObserverFactory;
     @Autowired
-    private ObjectStore objectStore;
+    private Function<UUID, ObjectStore> objectStoreFactory;
 
     @Override
     public void download(DownloadRequest downloadRequest) {
         RequestStatusObserver requestStatusObserver =
-                requestStatusObserverFactory.getNew(downloadRequest);
+            requestStatusObserverFactory.getNew(downloadRequest);
         DownloadTask downloadTask = new DownloadTask(
-                downloadRequest,
-                ioStreamsProvider,
-                downloadingStrategy,
-                requestStatusObserver,
-                objectStore);
+            downloadRequest,
+            ioStreamsProvider,
+            downloadingStrategy,
+            requestStatusObserver,
+            objectStoreFactory.apply(downloadRequest.getOrgUUID())
+        );
         downloadRequest.setState(DownloadRequest.State.QUEUED);
         // ^^^ maybe it should be after execute but it wont work with eager executor
         executorService.execute(downloadTask);
     }
+
 
 }

@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Single tasks is responsible for one download.
@@ -42,11 +43,11 @@ public class DownloadTask implements Runnable {
     private final ObjectStore objectStore;
 
     public DownloadTask(
-            DownloadRequest downloadRequest,
-            IOStreamsProvider ioStreamsProvider,
-            DownloadingStrategy downloadingStrategy,
-            RequestStatusObserver requestStatusObserver,
-            ObjectStore objectStore) {
+        DownloadRequest downloadRequest,
+        IOStreamsProvider ioStreamsProvider,
+        DownloadingStrategy downloadingStrategy,
+        RequestStatusObserver requestStatusObserver,
+        ObjectStore objectStore) {
         this.downloadRequest = downloadRequest;
         this.ioStreamsProvider = ioStreamsProvider;
         this.downloadingStrategy = downloadingStrategy;
@@ -59,7 +60,8 @@ public class DownloadTask implements Runnable {
         downloadRequest.setState(DownloadRequest.State.IN_PROGRESS);
         LOGGER.info("Starting task: {}", downloadRequest);
         requestStatusObserver.notifyStarted();
-        try (InputStream in = ioStreamsProvider.getInputStream(downloadRequest.getSource(), null)) {
+        try (InputStream in = ioStreamsProvider
+            .getInputStream(downloadRequest.getSource(), getInputStreamProperties())) {
             String objectId = downloadingStrategy.download(in, objectStore, requestStatusObserver);
             LOGGER.info("Finished task: {}", downloadRequest);
             downloadRequest.setSavedObjectId(objectId);
@@ -73,5 +75,12 @@ public class DownloadTask implements Runnable {
             downloadRequest.setState(DownloadRequest.State.FAILED);
             requestStatusObserver.notifyFinishedFailed(e);
         }
+    }
+
+    private Properties getInputStreamProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("token", downloadRequest.getToken());
+        properties.setProperty("orgUUID", downloadRequest.getOrgUUID().toString());
+        return properties;
     }
 }

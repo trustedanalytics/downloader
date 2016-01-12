@@ -19,6 +19,8 @@ import org.trustedanalytics.services.downloader.core.Connector;
 import org.trustedanalytics.store.ObjectStore;
 
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,28 +29,32 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.function.BiFunction;
 
 @Component
 public class ObjectStoreConnector implements Connector {
 
     private static final ImmutableList<String> SUPPORTED_SCHEMES = ImmutableList.of("os");
 
-    private final ObjectStore objectStore;
+    private BiFunction<UUID, String, ObjectStore> objectStoreFactory;
 
     @Autowired
-    public ObjectStoreConnector(ObjectStore objectStore) {
-        this.objectStore = objectStore;
+    public ObjectStoreConnector(BiFunction<UUID, String, ObjectStore> objectStoreFactory) {
+        this.objectStoreFactory = objectStoreFactory;
     }
 
     @Override
-    public InputStream getInputStream(URI source, Properties properties)
-            throws IOException {
-        return objectStore.getContent(source.getPath().substring(1)); // we strip first /
+    public InputStream getInputStream(URI source, Properties properties) throws IOException {
+        UUID orgUUID = UUID.fromString(properties.getProperty("orgUUID"));
+        String token = properties.getProperty("token");
+        return objectStoreFactory.apply(orgUUID, token)
+            .getContent(source.getPath().substring(1)); // we strip first /
     }
 
     @Override
     public OutputStream getOutputStream(URI target, Properties properties)
-            throws IOException {
+        throws IOException {
         throw new UnsupportedOperationException();
     }
 

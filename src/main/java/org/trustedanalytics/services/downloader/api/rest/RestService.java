@@ -48,7 +48,7 @@ public class RestService {
 
     @Autowired
     public RestService(DownloadRequestsStore downloadRequestsStore,
-                       DownloadingEngine downloadingEngine, AuthTokenRetriever tokenRetriever) {
+        DownloadingEngine downloadingEngine, AuthTokenRetriever tokenRetriever) {
         this.downloadRequestsStore = downloadRequestsStore;
         this.downloadingEngine = downloadingEngine;
         this.tokenRetriever = tokenRetriever;
@@ -56,10 +56,10 @@ public class RestService {
 
     @RequestMapping(value = URI_BASE, method = RequestMethod.POST)
     public DownloadRequest addRequest(@RequestBody Request request)
-            throws URISyntaxException, MalformedURLException {
+        throws URISyntaxException, MalformedURLException {
         LOGGER.info("add({})", request);
         DownloadRequest downloadRequest =
-                new DownloadRequest(new URI(request.getSource()), extractToken());
+            new DownloadRequest(new URI(request.getSource()), request.getOrgUUID(), extractToken());
         if (request.getCallback() != null) {
             downloadRequest.setCallback(new URL(request.getCallback()));
         }
