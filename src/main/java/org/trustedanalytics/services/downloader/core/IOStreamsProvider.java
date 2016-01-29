@@ -15,16 +15,16 @@
  */
 package org.trustedanalytics.services.downloader.core;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-
 import org.trustedanalytics.services.downloader.protocols.FileConnector;
 import org.trustedanalytics.services.downloader.protocols.HttpConnector;
 import org.trustedanalytics.services.downloader.protocols.ObjectStoreConnector;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,7 +46,7 @@ public class IOStreamsProvider {
 
     @Autowired
     public IOStreamsProvider(FileConnector fileConnector, HttpConnector httpConnector,
-                             ObjectStoreConnector objectStoreConnector) {
+            ObjectStoreConnector objectStoreConnector) {
         this(Lists.newArrayList(fileConnector, httpConnector, objectStoreConnector));
     }
 
@@ -72,7 +72,9 @@ public class IOStreamsProvider {
         return supportedSchemes.get(scheme);
     }
 
-    public InputStream getInputStream(URI in, Properties properties) throws IOException {
+    public InputStream getInputStream(URI in, Properties properties)
+            throws IOException, LoginException, InterruptedException {
+
         Connector connector = getConnectorForScheme(in.getScheme());
         return connector.getInputStream(in, properties);
     }

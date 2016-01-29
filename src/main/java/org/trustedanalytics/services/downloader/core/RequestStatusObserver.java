@@ -15,8 +15,6 @@
  */
 package org.trustedanalytics.services.downloader.core;
 
-import java.io.IOException;
-
 /**
  * API to inform watcher(s) about progress of job downloading
  */
@@ -35,6 +33,6 @@ public interface RequestStatusObserver {
     default void notifyFinishedSuccess() {
     }
 
-    default void notifyFinishedFailed(IOException cause) {
+    default void notifyFinishedFailed(Exception cause) {
     }
 }

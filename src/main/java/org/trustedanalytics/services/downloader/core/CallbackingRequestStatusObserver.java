@@ -15,8 +15,7 @@
  */
 package org.trustedanalytics.services.downloader.core;
 
-import java.io.IOException;
-import java.util.Collections;
+import org.trustedanalytics.cloud.auth.HeaderAddingHttpInterceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import org.trustedanalytics.cloud.auth.HeaderAddingHttpInterceptor;
+import java.util.Collections;
 
 public class CallbackingRequestStatusObserver implements RequestStatusObserver {
 
@@ -65,7 +64,7 @@ public class CallbackingRequestStatusObserver implements RequestStatusObserver {
     }
 
     @Override
-    public void notifyFinishedFailed(IOException cause) {
+    public void notifyFinishedFailed(Exception cause) {
         notifyChange();
     }
 

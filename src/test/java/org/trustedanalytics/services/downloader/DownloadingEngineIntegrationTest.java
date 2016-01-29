@@ -15,14 +15,13 @@
  */
 package org.trustedanalytics.services.downloader;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.ByteStreams;
-
 import org.trustedanalytics.services.downloader.core.DownloadRequest;
 import org.trustedanalytics.services.downloader.core.RequestStatusObserver;
 import org.trustedanalytics.services.downloader.threading.MultithreadedDownloadingEngine;
 import org.trustedanalytics.store.ObjectStore;
 
+import com.google.common.base.Throwables;
+import com.google.common.io.ByteStreams;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -30,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.inOrder;
 @ContextConfiguration(classes = {DownloaderConfigInTests.class})
 public class DownloadingEngineIntegrationTest {
 
-    private static final byte[] SIMPLE_DATA = new byte[]{1, 2, 3, 4, 5, 6};
+    private static final byte[] SIMPLE_DATA = new byte[] {1, 2, 3, 4, 5, 6};
 
     @Autowired
     RequestStatusObserver mockedRequestStatusObserver;
@@ -60,7 +60,8 @@ public class DownloadingEngineIntegrationTest {
     String TOKEN;
 
     @Test(timeout = 1000 * 1000) // Not needed now
-    public void download_notExistingSource_iOExceptionThrown() throws InterruptedException {
+    public void download_notExistingSource_iOExceptionThrown()
+            throws IOException, LoginException, InterruptedException {
         UUID orgUUID = UUID.randomUUID();
         DownloadRequest downloadRequest =
                 new DownloadRequest(makeURI("os://somehost.com/notexisting"), orgUUID, TOKEN);
@@ -74,7 +75,7 @@ public class DownloadingEngineIntegrationTest {
     }
 
     @Test(timeout = 1000 * 1000) // Not needed now
-    public void download_existingFile_dataAreEqual() throws IOException, InterruptedException {
+    public void download_existingFile_dataAreEqual() throws IOException, LoginException, InterruptedException {
         String id1 = objectStore.save(SIMPLE_DATA);
         UUID orgUUID = UUID.randomUUID();
         DownloadRequest downloadRequest = new DownloadRequest(makeURI("os://somehost.com/" + id1), orgUUID, TOKEN);
@@ -84,7 +85,7 @@ public class DownloadingEngineIntegrationTest {
 
         InOrder inOrder = inOrder(mockedRequestStatusObserver);
         inOrder.verify(mockedRequestStatusObserver).notifyStarted();
-//        inOrder.verify(mockedRequestStatusObserver).notifyProgress(eq((long) SIMPLE_DATA.length));
+        //        inOrder.verify(mockedRequestStatusObserver).notifyProgress(eq((long) SIMPLE_DATA.length));
         // ^^^ due to using simpleDownloadingStrategy
         inOrder.verify(mockedRequestStatusObserver).notifyFinishedSuccess();
         inOrder.verifyNoMoreInteractions();

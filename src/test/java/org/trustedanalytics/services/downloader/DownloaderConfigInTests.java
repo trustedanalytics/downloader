@@ -22,6 +22,8 @@ import org.trustedanalytics.services.downloader.core.StreamDecoder;
 import org.trustedanalytics.services.downloader.core.ZipStreamDecoder;
 import org.trustedanalytics.store.MemoryObjectStore;
 import org.trustedanalytics.store.ObjectStore;
+import org.trustedanalytics.store.ObjectStoreFactory;
+import org.trustedanalytics.store.TokenizedObjectStoreFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +31,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
-
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.mockito.Mockito.mock;
 
@@ -65,12 +63,12 @@ public class DownloaderConfigInTests {
     }
 
     @Bean
-    public Function<UUID, ObjectStore> objectStoreSupplier(ObjectStore objectStore) {
+    public ObjectStoreFactory<UUID> objectStoreSupplier(ObjectStore objectStore) {
         return (x) -> objectStore;
     }
 
     @Bean
-    public BiFunction<UUID, String, ObjectStore> objectStoreFactory(ObjectStore objectStore) {
+    public TokenizedObjectStoreFactory<UUID, String> objectStoreFactory(ObjectStore objectStore) {
         return (x, y) -> objectStore;
     }
 

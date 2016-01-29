@@ -21,15 +21,16 @@ import org.trustedanalytics.services.downloader.core.DownloadingStrategy;
 import org.trustedanalytics.services.downloader.core.IOStreamsProvider;
 import org.trustedanalytics.services.downloader.core.RequestStatusObserver;
 import org.trustedanalytics.services.downloader.core.RequestStatusObserverFactory;
-import org.trustedanalytics.store.ObjectStore;
+import org.trustedanalytics.store.ObjectStoreFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Function;
 
 @Component
 public class MultithreadedDownloadingEngine implements DownloadingEngine {
@@ -43,23 +44,21 @@ public class MultithreadedDownloadingEngine implements DownloadingEngine {
     @Autowired
     private RequestStatusObserverFactory requestStatusObserverFactory;
     @Autowired
-    private Function<UUID, ObjectStore> objectStoreFactory;
+    private ObjectStoreFactory<UUID> objectStoreFactory;
 
     @Override
-    public void download(DownloadRequest downloadRequest) {
+    public void download(DownloadRequest downloadRequest) throws IOException, LoginException, InterruptedException {
         RequestStatusObserver requestStatusObserver =
-            requestStatusObserverFactory.getNew(downloadRequest);
+                requestStatusObserverFactory.getNew(downloadRequest);
         DownloadTask downloadTask = new DownloadTask(
-            downloadRequest,
-            ioStreamsProvider,
-            downloadingStrategy,
-            requestStatusObserver,
-            objectStoreFactory.apply(downloadRequest.getOrgUUID())
+                downloadRequest,
+                ioStreamsProvider,
+                downloadingStrategy,
+                requestStatusObserver,
+                objectStoreFactory.create(downloadRequest.getOrgUUID())
         );
         downloadRequest.setState(DownloadRequest.State.QUEUED);
         // ^^^ maybe it should be after execute but it wont work with eager executor
         executorService.execute(downloadTask);
     }
-
-
 }

@@ -24,6 +24,7 @@ import org.trustedanalytics.store.ObjectStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -43,11 +44,11 @@ public class DownloadTask implements Runnable {
     private final ObjectStore objectStore;
 
     public DownloadTask(
-        DownloadRequest downloadRequest,
-        IOStreamsProvider ioStreamsProvider,
-        DownloadingStrategy downloadingStrategy,
-        RequestStatusObserver requestStatusObserver,
-        ObjectStore objectStore) {
+            DownloadRequest downloadRequest,
+            IOStreamsProvider ioStreamsProvider,
+            DownloadingStrategy downloadingStrategy,
+            RequestStatusObserver requestStatusObserver,
+            ObjectStore objectStore) {
         this.downloadRequest = downloadRequest;
         this.ioStreamsProvider = ioStreamsProvider;
         this.downloadingStrategy = downloadingStrategy;
@@ -61,14 +62,14 @@ public class DownloadTask implements Runnable {
         LOGGER.info("Starting task: {}", downloadRequest);
         requestStatusObserver.notifyStarted();
         try (InputStream in = ioStreamsProvider
-            .getInputStream(downloadRequest.getSource(), getInputStreamProperties())) {
+                .getInputStream(downloadRequest.getSource(), getInputStreamProperties())) {
             String objectId = downloadingStrategy.download(in, objectStore, requestStatusObserver);
             LOGGER.info("Finished task: {}", downloadRequest);
             downloadRequest.setSavedObjectId(objectId);
             downloadRequest.setObjectStoreId(objectStore.getId());
             downloadRequest.setState(DownloadRequest.State.DONE);
             requestStatusObserver.notifyFinishedSuccess();
-        } catch (IOException e) {
+        } catch (IOException | LoginException | InterruptedException e) {
             // NOTE: there might be RuntimeException here or total death of this service
             // - we can miss notify..Failed
             LOGGER.error("Failed task: {}", downloadRequest, e);

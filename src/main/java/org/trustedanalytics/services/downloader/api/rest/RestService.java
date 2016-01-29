@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.MalformedURLException;
+import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 @RestController
@@ -47,8 +47,8 @@ public class RestService {
     private AuthTokenRetriever tokenRetriever;
 
     @Autowired
-    public RestService(DownloadRequestsStore downloadRequestsStore,
-        DownloadingEngine downloadingEngine, AuthTokenRetriever tokenRetriever) {
+    public RestService(DownloadRequestsStore downloadRequestsStore, DownloadingEngine downloadingEngine,
+            AuthTokenRetriever tokenRetriever) {
         this.downloadRequestsStore = downloadRequestsStore;
         this.downloadingEngine = downloadingEngine;
         this.tokenRetriever = tokenRetriever;
@@ -56,10 +56,11 @@ public class RestService {
 
     @RequestMapping(value = URI_BASE, method = RequestMethod.POST)
     public DownloadRequest addRequest(@RequestBody Request request)
-        throws URISyntaxException, MalformedURLException {
+            throws IOException, LoginException, InterruptedException {
+
         LOGGER.info("add({})", request);
         DownloadRequest downloadRequest =
-            new DownloadRequest(new URI(request.getSource()), request.getOrgUUID(), extractToken());
+                new DownloadRequest(URI.create(request.getSource()), request.getOrgUUID(), extractToken());
         if (request.getCallback() != null) {
             downloadRequest.setCallback(new URL(request.getCallback()));
         }

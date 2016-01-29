@@ -16,45 +16,44 @@
 package org.trustedanalytics.services.downloader.protocols;
 
 import org.trustedanalytics.services.downloader.core.Connector;
-import org.trustedanalytics.store.ObjectStore;
+import org.trustedanalytics.store.TokenizedObjectStoreFactory;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 @Component
 public class ObjectStoreConnector implements Connector {
 
     private static final ImmutableList<String> SUPPORTED_SCHEMES = ImmutableList.of("os");
 
-    private BiFunction<UUID, String, ObjectStore> objectStoreFactory;
+    private TokenizedObjectStoreFactory<UUID, String> objectStoreFactory;
 
     @Autowired
-    public ObjectStoreConnector(BiFunction<UUID, String, ObjectStore> objectStoreFactory) {
+    public ObjectStoreConnector(TokenizedObjectStoreFactory<UUID, String> objectStoreFactory) {
         this.objectStoreFactory = objectStoreFactory;
     }
 
     @Override
-    public InputStream getInputStream(URI source, Properties properties) throws IOException {
+    public InputStream getInputStream(URI source, Properties properties)
+            throws IOException, LoginException, InterruptedException {
+
         UUID orgUUID = UUID.fromString(properties.getProperty("orgUUID"));
         String token = properties.getProperty("token");
-        return objectStoreFactory.apply(orgUUID, token)
-            .getContent(source.getPath().substring(1)); // we strip first /
+        return objectStoreFactory.create(orgUUID, token)
+                .getContent(source.getPath().substring(1)); // we strip first /
     }
 
     @Override
-    public OutputStream getOutputStream(URI target, Properties properties)
-        throws IOException {
+    public OutputStream getOutputStream(URI target, Properties properties) throws IOException {
         throw new UnsupportedOperationException();
     }
 

@@ -17,6 +17,7 @@ package org.trustedanalytics.services.downloader.core;
 
 import com.google.common.collect.ImmutableList;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +29,8 @@ import java.util.Properties;
  */
 public interface Connector {
 
-    InputStream getInputStream(URI source, Properties properties) throws IOException;
+    InputStream getInputStream(URI source, Properties properties)
+            throws IOException, LoginException, InterruptedException;
 
     OutputStream getOutputStream(URI target, Properties properties) throws IOException;
 

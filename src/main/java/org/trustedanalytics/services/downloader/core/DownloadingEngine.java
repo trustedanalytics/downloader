@@ -15,10 +15,13 @@
  */
 package org.trustedanalytics.services.downloader.core;
 
+import javax.security.auth.login.LoginException;
+import java.io.IOException;
+
 /**
  * Entry point for all downloading. Just plug it into any API.
  */
 public interface DownloadingEngine {
 
-    void download(DownloadRequest downloadRequest);
+    void download(DownloadRequest downloadRequest) throws IOException, LoginException, InterruptedException;
 }
