@@ -24,6 +24,13 @@
         <jacoco-measurement-classes>0.750</jacoco-measurement-classes>              <!-- Value <0.000, 1.000>, at least 3 places after coma -->
     </properties>
 
+    <repositories>
+        <repository>
+          <id>cloudera</id>
+          <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+    </repositories>
+
     <build>
         <resources>
             <resource>
