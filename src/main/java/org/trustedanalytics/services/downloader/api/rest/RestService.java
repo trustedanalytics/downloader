@@ -20,6 +20,7 @@ import org.trustedanalytics.services.downloader.core.DownloadRequest;
 import org.trustedanalytics.services.downloader.core.DownloadingEngine;
 import org.trustedanalytics.services.downloader.store.DownloadRequestsStore;
 
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class RestService {
         this.tokenRetriever = tokenRetriever;
     }
 
+    @ApiOperation("Adds download request")
     @RequestMapping(value = URI_BASE, method = RequestMethod.POST)
     public DownloadRequest addRequest(@RequestBody Request request)
             throws IOException, LoginException, InterruptedException {
@@ -71,6 +73,7 @@ public class RestService {
         return downloadRequest;
     }
 
+    @ApiOperation("Get download request data for given ID. Used mostly to check status")
     @RequestMapping(value = URI_BASE + "/{id}", method = RequestMethod.GET)
     public DownloadRequest getRequest(@PathVariable String id) {
         LOGGER.info("get({})", id);

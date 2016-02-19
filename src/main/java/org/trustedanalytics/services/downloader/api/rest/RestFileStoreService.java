@@ -17,6 +17,7 @@ package org.trustedanalytics.services.downloader.api.rest;
 
 import org.trustedanalytics.store.ObjectStoreFactory;
 
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class RestFileStoreService {
     @Autowired
     private ObjectStoreFactory<UUID> objectStoreFactory;
 
+    @ApiOperation("Removes previously downloaded file")
     @RequestMapping(value = "/rest/filestore/orgId/{orgId}/fileId/{id}/", method = RequestMethod.DELETE)
     public void delete(@PathVariable UUID orgId, @PathVariable String id)
             throws IOException, LoginException, InterruptedException {

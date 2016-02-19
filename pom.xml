@@ -7,7 +7,7 @@
         <connection>scm:git:git@downloader:trustedanalytics/downloader.git</connection>
         <tag>HEAD</tag>
     </scm>
-    <version>0.6.5</version>
+    <version>0.6.6</version>
     <name>Downloader</name>
     <description>Downloader</description>
 
@@ -20,10 +20,10 @@
     <properties>
         <start-class>org.trustedanalytics.services.downloader.Main</start-class>
 
-        <jacoco-measurement-instructions>0.503</jacoco-measurement-instructions>    <!-- Value <0.000, 1.000>, at least 3 places after coma -->
+        <jacoco-measurement-instructions>0.499</jacoco-measurement-instructions>    <!-- Value <0.000, 1.000>, at least 3 places after coma -->
         <jacoco-measurement-branches>0.437</jacoco-measurement-branches>            <!-- Value <0.000, 1.000>, at least 3 places after coma -->
-        <jacoco-measurement-lines>0.486</jacoco-measurement-lines>                  <!-- Value <0.000, 1.000>, at least 3 places after coma -->
-        <jacoco-measurement-classes>0.750</jacoco-measurement-classes>              <!-- Value <0.000, 1.000>, at least 3 places after coma -->
+        <jacoco-measurement-lines>0.477</jacoco-measurement-lines>                  <!-- Value <0.000, 1.000>, at least 3 places after coma -->
+        <jacoco-measurement-classes>0.720</jacoco-measurement-classes>              <!-- Value <0.000, 1.000>, at least 3 places after coma -->
     </properties>
 
     <build>
@@ -206,6 +206,11 @@
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
