@@ -55,7 +55,10 @@ public class RestService {
         this.tokenRetriever = tokenRetriever;
     }
 
-    @ApiOperation("Adds download request")
+    @ApiOperation(
+            value = "Adds download request",
+            notes = "Privilege level: Consumer of this endpoint must have valid access token"
+    )
     @RequestMapping(value = URI_BASE, method = RequestMethod.POST)
     public DownloadRequest addRequest(@RequestBody Request request)
             throws IOException, LoginException, InterruptedException {
@@ -73,7 +76,10 @@ public class RestService {
         return downloadRequest;
     }
 
-    @ApiOperation("Get download request data for given ID. Used mostly to check status")
+    @ApiOperation(
+            value = "Get download request data for given ID. Used mostly to check status",
+            notes = "Privilege level: Consumer of this endpoint must have valid access token"
+    )
     @RequestMapping(value = URI_BASE + "/{id}", method = RequestMethod.GET)
     public DownloadRequest getRequest(@PathVariable String id) {
         LOGGER.info("get({})", id);

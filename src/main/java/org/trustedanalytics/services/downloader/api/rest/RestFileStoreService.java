@@ -44,7 +44,10 @@ public class RestFileStoreService {
     @Autowired
     private ObjectStoreFactory<UUID> objectStoreFactory;
 
-    @ApiOperation("Removes previously downloaded file")
+    @ApiOperation(
+            value = "Removes previously downloaded file",
+            notes = "Privilege level: Consumer of this endpoint must be a member of specified organization based on valid access token"
+    )
     @RequestMapping(value = "/rest/filestore/orgId/{orgId}/fileId/{id}/", method = RequestMethod.DELETE)
     public void delete(@PathVariable UUID orgId, @PathVariable String id)
             throws IOException, LoginException, InterruptedException {
