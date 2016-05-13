@@ -7,7 +7,7 @@
         <connection>scm:git:git@downloader:trustedanalytics/downloader.git</connection>
         <tag>HEAD</tag>
     </scm>
-    <version>0.6.10</version>
+    <version>0.6.11</version>
     <name>Downloader</name>
     <description>Downloader</description>
 
